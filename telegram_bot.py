@@ -5,65 +5,59 @@ Created on Tue Feb 11 16:59:50 2025
 @author: zulfi
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 11 16:48:16 2025
-
-@author: zulfi
-"""
-import os  # 🔹 Faylning boshiga qo‘ying
 import asyncio
 import nest_asyncio
+import json
+import os
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from dotenv import load_dotenv  # .env fayldan tokenni yuklash
 
 nest_asyncio.apply()
 
-TOKEN = os.getenv("TOKEN")  # 🔹 TOKEN endi Railway'dan olinadi
+# 📌 .env dan tokenni olish
+load_dotenv()
+TOKEN = os.getenv("TOKEN")
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
-# 📌video junatib file id olish
+# 📌 JSON fayldan ma'lumotlarni yuklash
+def load_videos():
+    try:
+        with open("videos.json", "r", encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
 
+def load_channels():
+    try:
+        with open("channels.json", "r", encoding="utf-8") as file:
+            data = json.load(file)
+            channels = data.get("channels", [])
+            print(f"🔵 Yuklangan kanallar: {channels}")
+            return channels
+    except FileNotFoundError:
+        print("❌ channels.json topilmadi!")
+        return []
+
+# 📌 Video yuklab, `file_id` olish
 @dp.message(lambda message: message.video) 
 async def get_file_id(message: types.Message):
     file_id = message.video.file_id
     await message.reply(f"📌 Yangi `file_id`: `{file_id}`")
-    print(f"📌 Yangi `file_id`: {file_id}")  # Terminalda ham chiqadi
+    print(f"📌 Yangi `file_id`: {file_id}")
 
-
-# 📌 Tekshirish kerak bo‘lgan kanallar
-REQUIRED_CHANNELS = [
-    ("Kanal", "@yangi_kanal0208")
-]
-
-# 📌 Video mapping (kod → file_id + description)
-VIDEO_MAPPING = {
-    "230": {
-        "file_id": "BAACAgIAAxkBAAMHZ6oSDreTOnGrDC1UeVMGj5-_UR4AAqJlAAL20lBJU-pj7ryHkxQ2BA",
-        "description": "🎬 *Kino nomi:* Avengers: Endgame\n📆 *Yili:* 2019\n🎭 *Janr:* Fantastika, Harakat, Drama\n🕒 *Davomiyligi:* 3 soat 2 daqiqa\n⭐ *IMDB reytingi:* 8.4/10"
-    },
-    "231": {
-        "file_id": "BAACAgIAAxkBAAMXZ6oVWL_QI-LjTQn7slUj5sQ43uUAAgZhAAJJ7XlIlbGXDfUJUn42BA",
-        "description": "🎬 *Kino nomi:* Inception\n📆 *Yili:* 2010\n🎭 *Janr:* Fantastika, Triller\n🕒 *Davomiyligi:* 2 soat 28 daqiqa\n⭐ *IMDB reytingi:* 8.8/10"
-    },
-    "100": {
-    "file_id": "BAACAgIAAxkBAANWZ6saiQdgKkol1u70Fu4cPcdU69oAAj5jAAISnWFJa5i0gHHrqZY2BA",
-    "description": "🎬 *Kino nomi:* Yetimlar (Bekas)\n📆 *Yili:* 2012\n🌍 *Mamlakat:* Shvetsiya, Finlyandiya, Iroq\n🎭 *Janr:* Drama\n🕒 *Davomiyligi:* 97 daqiqa\n⭐ *IMDB reytingi:* 7.2/10"
-}
-
-    
-    
-    }
-    
+# 📌 Kanallarni JSON fayldan yuklash
+REQUIRED_CHANNELS = load_channels()  
 
 # 📌 Inline keyboard tugmalarini yaratish
 def get_subscription_keyboard():
     keyboard = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text=channel_name, url=f"https://t.me/{channel_link[1:]}")]
-            for channel_name, channel_link in REQUIRED_CHANNELS
+            [InlineKeyboardButton(text=channel["name"], url=f"https://t.me/{channel['username'][1:]}")]
+            for channel in load_channels()
         ]
     )
     keyboard.inline_keyboard.append(
@@ -74,18 +68,27 @@ def get_subscription_keyboard():
 # 🎯 `/start` buyruqni ushlash
 @dp.message(Command("start"))
 async def start_command(message: types.Message):
+    print("🟢 /start bosildi!") 
     user_id = message.from_user.id
     not_subscribed = []
+    channels = load_channels()  
+
+    if not channels:
+        await message.answer("❌ Hech qanday kanal sozlanmagan! Admin tekshirishi kerak.")
+        return
     
-    # 📌 Foydalanuvchi barcha kanallarga obuna bo‘lganmi?
-    for channel_name, channel_link in REQUIRED_CHANNELS:
-        member = await bot.get_chat_member(chat_id=channel_link, user_id=user_id)
-        if member.status not in ["member", "administrator", "creator"]:
-            not_subscribed.append(channel_name)
-    
+    for channel in channels:
+        try:
+            member = await bot.get_chat_member(chat_id=channel["username"], user_id=user_id)
+            if member.status not in ["member", "administrator", "creator"]:
+                not_subscribed.append(channel["name"])
+        except Exception as e:
+            print(f"⚠️ Xatolik: {e}")
+            continue
+
     if not_subscribed:
         await message.answer(
-            "❌ Kechirasiz, botimizdan foydalanishdan oldin ushbu kanallarga a'zo bo'lishingiz kerak.",
+            "❌ Kechirasiz, botdan foydalanish uchun quyidagi kanallarga obuna bo‘lishingiz kerak:",
             reply_markup=get_subscription_keyboard()
         )
     else:
@@ -96,12 +99,16 @@ async def start_command(message: types.Message):
 async def check_subscription(callback_query: types.CallbackQuery):
     user_id = callback_query.from_user.id
     not_subscribed = []
+    channels = load_channels()  
 
-    # 📌 Yana tekshiramiz, foydalanuvchi a'zo bo‘lganmi?
-    for channel_name, channel_link in REQUIRED_CHANNELS:
-        member = await bot.get_chat_member(chat_id=channel_link, user_id=user_id)
-        if member.status not in ["member", "administrator", "creator"]:
-            not_subscribed.append(channel_name)
+    for channel in channels:
+        try:
+            member = await bot.get_chat_member(chat_id=channel["username"], user_id=user_id)
+            if member.status not in ["member", "administrator", "creator"]:
+                not_subscribed.append(channel["name"])
+        except Exception as e:
+            print(f"⚠️ Xatolik: {e}")
+            continue
 
     if not_subscribed:
         await callback_query.message.edit_text(
@@ -111,27 +118,32 @@ async def check_subscription(callback_query: types.CallbackQuery):
     else:
         await callback_query.message.edit_text("✅ Rahmat! Endi botdan foydalanishingiz mumkin.")
 
-# 🎯 Foydalanuvchi **kino kodi** yuborganda, video + matn jo‘natish
+# 🎯 Kino kodi yuborilganda, video + tavsif jo‘natish
 @dp.message(lambda message: isinstance(message.text, str) and message.text.isdigit())
 async def send_video(message: types.Message):
     user_id = message.from_user.id
     not_subscribed = []
+    channels = load_channels()  
 
-    # 📌 Kanalga obuna bo‘lganligini tekshirish
-    for channel_name, channel_link in REQUIRED_CHANNELS:
-        member = await bot.get_chat_member(chat_id=channel_link, user_id=user_id)
-        if member.status not in ["member", "administrator", "creator"]:
-            not_subscribed.append(channel_name)
+    for channel in channels:
+        try:
+            member = await bot.get_chat_member(chat_id=channel["username"], user_id=user_id)
+            if member.status not in ["member", "administrator", "creator"]:
+                not_subscribed.append(channel["name"])
+        except Exception as e:
+            print(f"⚠️ Xatolik: {e}")
+            continue
 
     if not_subscribed:
         await message.answer(
-            "❌ Kechirasiz, botdan foydalanish uchun avval kanalga obuna bo‘lishingiz kerak.",
+            "❌ Kechirasiz, botdan foydalanish uchun quyidagi kanallarga obuna bo‘lishingiz kerak:",
             reply_markup=get_subscription_keyboard()
         )
         return
     
-    # 🎬 Kino kodiga mos video topish
-    video_data = VIDEO_MAPPING.get(message.text)
+    video_mapping = load_videos()  
+    video_data = video_mapping.get(message.text)
+    
     if video_data:
         await bot.send_video(
             chat_id=message.chat.id,
