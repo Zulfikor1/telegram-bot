@@ -149,6 +149,7 @@ async def send_video(message: types.Message):
             chat_id=message.chat.id,
             video=video_data["file_id"],
             caption=video_data["description"],
+            supports_streaming=True,  # 🚀 🔹 Foydalanuvchi faqat tomosha qiladi
             parse_mode="Markdown"
         )
     else:
