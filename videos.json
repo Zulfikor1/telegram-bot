@@ -1,28 +1,5 @@
 {
-    "230": {
-        "file_id": "BAACAgIAAxkBAAMHZ6oSDreTOnGrDC1UeVMGj5-_UR4AAqJlAAL20lBJU-pj7ryHkxQ2BA",
-        "description": "🎬 *Kino nomi:* Avengers: Endgame\n📆 *Yili:* 2019\n🎭 *Janr:* Fantastika, Harakat, Drama\n🕒 *Davomiyligi:* 3 soat 2 daqiqa\n⭐ *IMDB reytingi:* 8.4/10"
-    },
-    "231": {
-        "file_id": "BAACAgIAAxkBAAMXZ6oVWL_QI-LjTQn7slUj5sQ43uUAAgZhAAJJ7XlIlbGXDfUJUn42BA",
-        "description": "🎬 *Kino nomi:* Inception\n📆 *Yili:* 2010\n🎭 *Janr:* Fantastika, Triller\n🕒 *Davomiyligi:* 2 soat 28 daqiqa\n⭐ *IMDB reytingi:* 8.8/10"
-    },
-    "250": {
-        "file_id": "BAACAgIAAxkBAANuZ7LSkorA-7iMwyxKTpQ_WenQctIAAlluAAK18ZBJW36Zua1ViPA2BA",
-        "description": "🎬 *Kino nomi:* Inception\n📆 *Yili:* 2010\n🎭 *Janr:* Fantastika, Triller\n🕒 *Davomiyligi:* 2 soat 28 daqiqa\n⭐ *IMDB reytingi:* 8.8/10"
-    },
-   "260": {
-        "file_id": "BAACAgIAAxkBAAOIZ7LWyC5bf2RRKjFMnhUgtclIJy4AAr5cAAJU2plJqw1FVK9Pwvc2BA",
-        "description": "🎬 *Kino nomi:* Inception\n📆 *Yili:* 2010\n🎭 *Janr:* Fantastika, Triller\n🕒 *Davomiyligi:* 2 soat 28 daqiqa\n⭐ *IMDB reytingi:* 8.8/10"
-    },
-   "270": {
-        "file_id": "BAACAgIAAxkBAAONZ7LXZm9jr-RPLvly9vUwhNu1zHIAAshcAAJU2plJn9jeOz9drDk2BA",
-        "description": "🎬 *Kino nomi:* Inception\n📆 *Yili:* 2010\n🎭 *Janr:* Fantastika, Triller\n🕒 *Davomiyligi:* 2 soat 28 daqiqa\n⭐ *IMDB reytingi:* 8.8/10"
-    },
-   "280": {
-        "file_id": "BAACAgIAAyEFAASLzf1rAAMCZ7Ln8lsjsttWR4uwewoa2Cq1UAQAAsdlAALGmJlJ5-DYDFKRsY42BA",
-        "description": "🎬 *Kino nomi:* Inception\n📆 *Yili:* 2010\n🎭 *Janr:* Fantastika, Triller\n🕒 *Davomiyligi:* 2 soat 28 daqiqa\n⭐ *IMDB reytingi:* 8.8/10"
-    },
+    
   "100": {
         "file_id": "BAACAgIAAxkDAANpZ7LJrS4T5c4u8KBRSWGIpagPOX0AAj5jAAISnWFJa5i0gHHrqZY2BA",
         "description": "🎬 *Kino nomi:* Yetimlar (Bekas)\n📆 *Yili:* 2012\n🌍 *Mamlakat:* Shvetsiya, Finlyandiya, Iroq\n🎭 *Janr:* Drama\n🕒 *Davomiyligi:* 97 daqiqa\n⭐ *IMDB reytingi:* 7.2/10"
@@ -30,6 +7,11 @@
   "99": {
     "file_id": "BAACAgIAAyEFAASLzf1rAAMDZ7MJuT6Ee-elYqUghPan_APGTtYAAtRfAALgIplJ8AvPvUGcDek2BA",
     "description": "🎬 *Kino nomi:* Baxt ortidan izlab (The Pursuit of Happyness)\n📆 *Yili:* 2006\n🌍 *Mamlakat:* AQSh\n🎭 *Janr:* Biografiya, Drama\n🕒 *Davomiyligi:* 117 daqiqa\n⭐ *IMDB reytingi:* 8.0/10"
+},
+"98": {
+    "file_id": "BAACAgIAAyEFAASLzf1rAAMEZ7MMua6JBGYykCQeNZ1Mkjy0xLoAAr5nAALGmJlJDiWuj58nj382BA",
+    "description": "🎬 *Kino nomi:* Tinch okeani daxshatlari (Pacific Rim)\n📆 *Yili:* 2013\n🌍 *Mamlakat:* AQSh\n🎭 *Janr:* Fantastika, Aksiya\n🕒 *Davomiyligi:* 131 daqiqa\n⭐ *IMDB reytingi:* 6.9/10"
 }
+
 
 }
